@@ -10,7 +10,7 @@ import javax.sound.sampled.*;
 public class Audio {
     private Clip clip;
     public Audio(String fileName) {
-    	// Open through relative path
+    	// Open through relative path. Searches 
         try {
             String relPath = "samples\\" + fileName;
             URL soundURL = this.getClass().getResource(relPath);
