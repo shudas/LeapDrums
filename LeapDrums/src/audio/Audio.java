@@ -12,7 +12,19 @@ public class Audio {
     public Audio(String fileName) {
     	// Open through relative path. Searches 
         try {
+        	File dir = new File("..\\LeapDrums\\samples");
+        	boolean found = false;
+        	for (File child : dir.listFiles()) {
+        		System.out.println(child.getName() + ":" + fileName);
+        		if (fileName == child.getName()){
+        			found = true;
+        			System.out.println("YAY!");
+        		}
+        		System.out.println(child.getName());
+    		}
+        	
             String relPath = "samples\\" + fileName;
+            
             URL soundURL = this.getClass().getResource(relPath);
             AudioInputStream inputStream = AudioSystem.getAudioInputStream(soundURL);
             // load the sound into memory (a Clip)
