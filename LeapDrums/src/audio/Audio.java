@@ -10,16 +10,14 @@ import javax.sound.sampled.*;
 public class Audio {
     private Clip clip;
     public Audio(String fileName) {
-        // specify the sound to play
-        // (assuming the sound can be played by the audio system)
-        // from a wave File
+    	// Open through relative path
         try {
-            String absPath = new File("").getAbsolutePath() + "\\samples\\" + fileName;
-            System.out.println(absPath);
-            AudioInputStream sound = (AudioInputStream) this.getClass().getResourceAsStream(absPath);
+            String relPath = "samples\\" + fileName;
+            URL soundURL = this.getClass().getResource(relPath);
+            AudioInputStream inputStream = AudioSystem.getAudioInputStream(soundURL);
             // load the sound into memory (a Clip)
             clip = AudioSystem.getClip();
-            clip.open(sound);
+            clip.open(inputStream);
         }
         catch (Exception e) {
             e.printStackTrace();
