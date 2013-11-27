@@ -14,19 +14,23 @@ public class Audio {
         try {
         	File dir = new File("..\\LeapDrums\\samples");
         	boolean found = false;
+        	File soundFile = new File(".");
         	for (File child : dir.listFiles()) {
-        		System.out.println(child.getName() + ":" + fileName);
-        		if (fileName == child.getName()){
+        		if (child.getName().equalsIgnoreCase(fileName)){
+        			System.out.println("Yay!");
+        			soundFile = child;
         			found = true;
-        			System.out.println("YAY!");
+        			break;
         		}
-        		System.out.println(child.getName());
     		}
         	
-            String relPath = "samples\\" + fileName;
-            
-            URL soundURL = this.getClass().getResource(relPath);
-            AudioInputStream inputStream = AudioSystem.getAudioInputStream(soundURL);
+        	if (!found){
+        		throw new RuntimeException("File not found!");
+        	}
+//            String relPath = "samples\\" + fileName;
+//            URL soundURL = this.getClass().getResource(relPath);
+//            AudioInputStream inputStream = AudioSystem.getAudioInputStream(soundURL);
+        	AudioInputStream inputStream = AudioSystem.getAudioInputStream(soundFile);
             // load the sound into memory (a Clip)
             clip = AudioSystem.getClip();
             clip.open(inputStream);
