@@ -15,14 +15,15 @@ public class Audio {
         	File dir = new File("..\\LeapDrums\\samples");
         	boolean found = false;
         	File soundFile = new File(".");
-        	for (File child : dir.listFiles()) {
-        		if (child.getName().equalsIgnoreCase(fileName)){
-        			System.out.println("Yay!");
-        			soundFile = child;
-        			found = true;
-        			break;
-        		}
-    		}
+        	if (dir.isDirectory()){
+	        	for (File child : dir.listFiles()) {
+	        		if (child.getName().equalsIgnoreCase(fileName)){
+	        			soundFile = child;
+	        			found = true;
+	        			break;
+	        		}
+	    		}
+        	}
         	
         	if (!found){
         		throw new RuntimeException("File not found!");
@@ -30,6 +31,7 @@ public class Audio {
 //            String relPath = "samples\\" + fileName;
 //            URL soundURL = this.getClass().getResource(relPath);
 //            AudioInputStream inputStream = AudioSystem.getAudioInputStream(soundURL);
+        	
         	AudioInputStream inputStream = AudioSystem.getAudioInputStream(soundFile);
             // load the sound into memory (a Clip)
             clip = AudioSystem.getClip();
