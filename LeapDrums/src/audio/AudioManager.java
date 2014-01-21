@@ -9,6 +9,7 @@ package audio;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Set;
 
 public final class AudioManager {
 	
@@ -18,19 +19,12 @@ public final class AudioManager {
 	// Maps the instruments in config file to Lists of AudioClips
 	private static HashMap<String, Instrument> clipMap = new HashMap<String, Instrument>();
 	
-	public AudioManager(){
-		loadConfig();
-		for (Instrument list : clipMap.values()){
-			for (AudioClip clip : list.getClips()){
-				System.out.println(clip.getName());
-			}
-		}
-	}
+	private AudioManager(){	}
 	
 	/*
 	 * Loads the clips by reading the config file
 	 */
-	private static void loadConfig(){ 
+	public static void loadConfig(){ 
         try {
         	boolean configFound = false;
         	// Read the file using relative paths. Search LeapDrums dir (root dir)
@@ -104,14 +98,18 @@ public final class AudioManager {
     	clipMap.put(startString, new Instrument(clips));
 	}
 	
+	public static void play(String instToPlay){
+		clipMap.get(instToPlay).play();
+	}
+	
 	/*
 	 * Returns the different instrument types as indicated in config.txt
 	 */
-	public static final ArrayList<String> getInstruments(){
+	public static final Set<String> getInstrumentNames(){
 		if (!configLoaded){
 			throw new RuntimeException("Config file has not been loaded yet");
 		}
-		return (ArrayList<String>) clipMap.keySet();
+		return clipMap.keySet();
 	}
 	
 	/*
@@ -126,18 +124,13 @@ public final class AudioManager {
 		private ArrayList<AudioClip> clips;
 		
 		/*
-		 * The maximum number of samples (should be equal to size of clips)
+		 * The sample in clips that is currently being played/was last played.
+		 * This gets incremented in the play function before playing the new clip.
 		 */
-		private int maxSamples = 0;
-		
-		/*
-		 * The sample in clips that should be played next.
-		 */
-		private int currPlayingSample = 0;
+		private int currPlayingSample = -1;
 		
 		public Instrument(ArrayList<AudioClip> audioClips){
 			clips = audioClips;
-			maxSamples = audioClips.size();
 		}
 		
 		/*
@@ -151,26 +144,35 @@ public final class AudioManager {
 		 * Returns the maximum number of samples
 		 */
 		public int getMaxSamples(){
-			return maxSamples;
+			return clips.size();
 		}
 		
 		/*
 		 * Returns the sample in clips that should be played next.
 		 */
-		public int getCurrentPlayingSample(){
+		public int getNextPlayingSample(){
 			return currPlayingSample;
 		}
 		
 		/*
-		 * Plays the correct clip for this instrument
+		 * Plays the next clip for this instrument
 		 */
 		public void play(){
-			clips.get(currPlayingSample++).play();
+			++currPlayingSample;
 			// Reset the currPlayingSample to 0 if it exceeds max - 1
-			if (currPlayingSample == maxSamples){
+			if (currPlayingSample == clips.size()){
 				currPlayingSample = 0;
 			}
+			clips.get(currPlayingSample).play();
+
 		}
 		
+		/*
+		 * Stops the current clip for this instrument if it is being played
+		 */
+		public void stop(){
+			clips.get(currPlayingSample).stop();
+
+		}
 	}
 }

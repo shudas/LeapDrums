@@ -27,19 +27,21 @@ public class AudioClip {
     }
     
     public void play(){
-        clip.setFramePosition(0);  // Must always rewind!
-        clip.start();
-    }
-    
-    public void loop(){
-        clip.loop(Clip.LOOP_CONTINUOUSLY);
+    	try {
+	        clip.setFramePosition(0);  // Must always rewind!
+	        clip.start();
+	        System.out.println("Got here");
+    	}
+    	catch (Exception e) {
+    		throw new RuntimeException("Could not play clip");
+    	}
     }
     
     public void stop(){
         clip.stop();
     }
     
-    public String getName(){
+    public String getFilename(){
     	return filename;
     }
 }
