@@ -6,6 +6,37 @@
 
 package audio;
 
-public class AudioManager {
+import java.io.File;
 
+public final class AudioManager {
+	
+	public AudioManager(){
+		loadConfig();
+	}
+	
+	private static void loadConfig(){ 
+        try {
+        	boolean configFound = false;
+        	// Read the file using relative path
+        	File dir = new File("..\\LeapDrums");
+        	for (File child : dir.listFiles()) {
+        		if (child.getName().equalsIgnoreCase("config.txt")){
+        			configFound = true;
+        		}
+    		}
+        	
+        	// No config file was found
+        	if (!configFound){
+        		throw new RuntimeException("No config.txt file found in the root LeapDrums folder");
+        	}
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
+	}
+	
+	private static void readConfig(){
+		
+	}
 }

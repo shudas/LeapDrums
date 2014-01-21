@@ -5,7 +5,7 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.UIManager;
 
-import audio.Audio;
+import audio.*;
 
 public class TestMain {
 
@@ -13,7 +13,7 @@ public class TestMain {
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
-		
+		AudioManager am = new AudioManager();
 	}
 
 }
