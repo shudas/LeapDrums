@@ -1,0 +1,23 @@
+* WARNING: INCORRECTLY MODIFYING THIS FILE MAY CAUSE THE PROGRAM TO MALFUNCTION
+* PLEASE READ ALL INSTRUCTIONS BEFORE MAKING MODIFICATIONS
+* 
+* INSTRUCTIONS:
+* This file indicates what audio samples to load from the samples folder.
+* The list below indicates the beginning of the file names that will be included.
+* These file names indicate different instruments. The files in the samples folder
+* should have the format, [filename indicated below]###.wav. Multiple samples of
+* each instrument are included to avoid errors when the same instrument is played
+* in quick succession.
+* If you want to add your own drum samples, create multiple short .wav files and
+* add the name of the instrument to the list below.
+*
+* ***IMPORTANT: THE .WAV FILES MUST BE 16-BIT FILES***
+*
+* It is recommended that the filenames do not contain spaces.
+* Adding the '*' symbol before a line in this file means the program will not read that line
+* 
+* ***ONLY MODIFY BELOW THIS LINE***
+*
+hat
+kick
+snare
