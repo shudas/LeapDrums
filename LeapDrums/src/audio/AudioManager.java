@@ -6,7 +6,7 @@
 
 package audio;
 
-import java.io.File;
+import java.io.*;
 
 public final class AudioManager {
 	
@@ -22,6 +22,7 @@ public final class AudioManager {
         	for (File child : dir.listFiles()) {
         		if (child.getName().equalsIgnoreCase("config.txt")){
         			configFound = true;
+        			readConfig(child);
         		}
     		}
         	
@@ -36,7 +37,17 @@ public final class AudioManager {
         }
 	}
 	
-	private static void readConfig(){
-		
+	private static void readConfig(File configFile) throws IOException{
+		BufferedReader br = new BufferedReader(new FileReader(configFile));
+		String line;
+		while ((line = br.readLine()) != null) {
+		   line = line.trim();
+		   // Ignore empty strings and lines that start with *
+		   if (line == "" || line.charAt(0) == '*'){
+			   continue;
+		   }
+		   System.out.println(line);
+		}
+		br.close();
 	}
 }
