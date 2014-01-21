@@ -14,7 +14,11 @@
 *
 * ***IMPORTANT: THE .WAV FILES MUST BE 16-BIT FILES***
 *
-* It is recommended that the filenames do not contain spaces.
+* Instrument names should not contain spaces. Instrument names should be unique and should
+* not be substrings of other instrument names. E.g. both kick and kickdrum are not allowed.
+* File names are case sensitive so instrument kick labeled here and sample file
+* Kick01.wav is not allowed 
+*
 * Adding the '*' symbol before a line in this file means the program will not read that line
 * 
 * ***ONLY MODIFY BELOW THIS LINE***
