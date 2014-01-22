@@ -30,7 +30,6 @@ public class AudioClip {
     	try {
 	        clip.setFramePosition(0);  // Must always rewind!
 	        clip.start();
-	        System.out.println("Got here");
     	}
     	catch (Exception e) {
     		throw new RuntimeException("Could not play clip");
