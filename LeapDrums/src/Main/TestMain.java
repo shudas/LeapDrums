@@ -8,6 +8,7 @@ import javax.swing.UIManager;
 
 import audio.*;
 import ui.*;
+import leapPack.Leap;
 
 public class TestMain {
 
@@ -17,8 +18,10 @@ public class TestMain {
 	public static void main(String[] args) {
 		AudioManager.loadConfig();
 		
-		Object[] instrNames = AudioManager.getInstrumentNames().toArray(); 
+		Object[] instrNames = AudioManager.getInstrumentNames().toArray();
+		Leap.initLeap();
 		MainUI ui = new MainUI(Arrays.copyOf(instrNames, instrNames.length, String[].class));
+		
 	}
 
 }
