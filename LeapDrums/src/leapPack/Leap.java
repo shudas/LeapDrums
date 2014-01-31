@@ -11,10 +11,14 @@ package leapPack;
 import java.io.IOException;
 import java.lang.Math;
 
+import audio.AudioManager;
+
 import com.leapmotion.leap.*;
 import com.leapmotion.leap.Gesture.State;
 
 class SampleListener extends Listener {
+	final String[] instrumentNames;
+	
 	private Vector prevVector = new Vector();
 	double prevrRoll = 10000;
 	double prevlRoll = 10000;
@@ -24,6 +28,10 @@ class SampleListener extends Listener {
 	boolean rplayReady = false;
 	boolean leftReady = false;
 	boolean lplayReady = false;
+	
+	public SampleListener(String[] instrNames){
+		instrumentNames = instrNames;
+	}
 	
     public void onInit(Controller controller) {
         System.out.println("Initialized");
@@ -61,17 +69,25 @@ class SampleListener extends Listener {
             if (rHand.isValid()){
             	Vector currPos = rHand.palmPosition();
             	if (!rightReady){
-	        		if (currPos.getY() > vertThresh){
+	        		if (currPos.getY() > vertThresh + 50){
 	        			rightReady = false;
 	        			rplayReady = true;
 	        		}
-	        		else{
+	        		else if (currPos.getY() < vertThresh - 50){
 	        			rightReady = true;
 	        		}
             	}
             	else{
             		if (rplayReady){
-            			System.out.println("play r sound");
+            			int instrToPlay = 0;
+            			if (currPos.getX() > 150){
+            				instrToPlay = 2;
+            			}
+            			else if (Math.abs(currPos.getX()) <= 150){
+            				instrToPlay = 1;
+            			}
+            			System.out.println("Got r play");
+            			AudioManager.play(instrumentNames[instrToPlay]);
                 		rplayReady = false;
             		}
             		rightReady = false;
@@ -90,17 +106,21 @@ class SampleListener extends Listener {
             	}
             	else{
             		if (lplayReady){
-            			System.out.println("play l sound");
+            			int instrToPlay = 0;
+            			if (currPos.getX() > 150){
+            				instrToPlay = 2;
+            			}
+            			else if (Math.abs(currPos.getX()) <= 150){
+            				instrToPlay = 1;
+            			}
+            			System.out.println("Got l play");
+            			AudioManager.play(instrumentNames[instrToPlay]);
                 		lplayReady = false;
             		}
             		leftReady = false;
             	}
             }
         }
-
-//        if (!frame.hands().isEmpty() || !gestures.isEmpty()) {
-//            System.out.println();
-//        }
     }
     
     private void recognize(Gesture gesture, long frameNum){
@@ -137,9 +157,9 @@ class SampleListener extends Listener {
 }
 
 public class Leap {
-    public static void initLeap() {
+    public static void initLeap(String[] instrNames) {
         // Create a sample listener and controller
-        SampleListener listener = new SampleListener();
+        SampleListener listener = new SampleListener(instrNames);
         Controller controller = new Controller();
 
         // Have the sample listener receive events from the controller

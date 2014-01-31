@@ -19,7 +19,7 @@ public class TestMain {
 		AudioManager.loadConfig();
 		
 		Object[] instrNames = AudioManager.getInstrumentNames().toArray();
-		Leap.initLeap();
+		Leap.initLeap(Arrays.copyOf(instrNames, instrNames.length, String[].class));
 //		MainUI ui = new MainUI(Arrays.copyOf(instrNames, instrNames.length, String[].class));
 		
 	}
