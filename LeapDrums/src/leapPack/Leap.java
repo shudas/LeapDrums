@@ -19,9 +19,11 @@ import com.leapmotion.leap.Gesture.State;
 class SampleListener extends Listener {
 	final String[] instrumentNames;
 	
-	private Vector prevVector = new Vector();
-	double prevrRoll = 10000;
-	double prevlRoll = 10000;
+	float minrPitch = 10000;
+	float minlPitch = 10000;
+	float maxrPitch = 10000;
+	float maxlPitch = 10000;
+	String prevrInstr, prevlInstr;
 	double threshold = -20;
 	double vertThresh = 300;
 	boolean rightReady = false;
@@ -61,23 +63,31 @@ class SampleListener extends Listener {
         if (!frame.hands().isEmpty()) {
             // Get the first hand
             Hand rHand = frame.hands().rightmost();
-            Hand lHand = new Hand();
-            if (frame.hands().count() > 1){
-            	lHand = frame.hands().leftmost();
+            Hand lHand = frame.hands().leftmost();
+            // Consider the left hand to be null if there is only one hand
+            if (frame.hands().count() <= 1){
+            	lHand = new Hand();
             }
 
             if (rHand.isValid()){
             	Vector currPos = rHand.palmPosition();
-            	if (!rightReady){
-	        		if (currPos.getY() > vertThresh + 50){
-	        			rightReady = false;
-	        			rplayReady = true;
-	        		}
-	        		else if (currPos.getY() < vertThresh - 50){
-	        			rightReady = true;
-	        		}
+            	float pitch = rHand.direction().pitch();
+            	
+            	if (pitch < minrPitch || minrPitch == 10000){
+            		minrPitch = pitch;
             	}
-            	else{
+            	if (pitch > maxrPitch || maxrPitch == 10000){
+            		maxrPitch = pitch;
+            	}
+            	if (pitch > minrPitch + 0.2617){	// 10 deg: 0.1745
+            		rplayReady = true;
+            		System.out.println("Got set rplay");
+            	}
+            	if (pitch < maxrPitch - 0.2617){
+            		rightReady = true;
+            		minrPitch = 10000;
+            	}
+            	if (rightReady){
             		if (rplayReady){
             			int instrToPlay = 0;
             			if (currPos.getX() > 150){
@@ -86,25 +96,60 @@ class SampleListener extends Listener {
             			else if (Math.abs(currPos.getX()) <= 150){
             				instrToPlay = 1;
             			}
-            			System.out.println("Got r play");
+            			
             			AudioManager.play(instrumentNames[instrToPlay]);
                 		rplayReady = false;
             		}
             		rightReady = false;
+            		maxrPitch = 10000;
             	}
+//            	System.out.print(rHand.direction().yaw() + ", ");
+//            	System.out.print(rHand.palmNormal().roll() + ", ");
+//            	System.out.print('\t');            	
+//            	if (!rightReady){
+//	        		if (dir.pitch() > prevrPitch){
+//	        			rightReady = false;
+//	        			rplayReady = true;
+//	        		}
+//	        		else if (currPos.getY() < vertThresh - 50){
+//	        			rightReady = true;
+//	        		}
+//            	}
+//            	else{
+//            		if (rplayReady){
+//            			int instrToPlay = 0;
+//            			if (currPos.getX() > 150){
+//            				instrToPlay = 2;
+//            			}
+//            			else if (Math.abs(currPos.getX()) <= 150){
+//            				instrToPlay = 1;
+//            			}
+//            			System.out.println("Got r play");
+//            			AudioManager.play(instrumentNames[instrToPlay]);
+//                		rplayReady = false;
+//            		}
+//            		rightReady = false;
+//            	}
             }
             if (lHand.isValid()){
             	Vector currPos = lHand.palmPosition();
-            	if (!leftReady){
-	        		if (currPos.getY() > vertThresh){
-	        			leftReady = false;
-	        			lplayReady = true;
-	        		}
-	        		else{
-	        			leftReady = true;
-	        		}
+            	float pitch = lHand.direction().pitch();
+            	
+            	if (pitch < minlPitch || minlPitch == 10000){
+            		minlPitch = pitch;
             	}
-            	else{
+            	if (pitch > maxlPitch || maxlPitch == 10000){
+            		maxlPitch = pitch;
+            	}
+            	if (pitch > minlPitch + 0.2617){	// 10 deg: 0.1745
+            		lplayReady = true;
+            		System.out.println("Got set rplay");
+            	}
+            	if (pitch < maxlPitch - 0.2617){
+            		leftReady = true;
+            		minlPitch = 10000;
+            	}
+            	if (leftReady){
             		if (lplayReady){
             			int instrToPlay = 0;
             			if (currPos.getX() > 150){
@@ -113,46 +158,46 @@ class SampleListener extends Listener {
             			else if (Math.abs(currPos.getX()) <= 150){
             				instrToPlay = 1;
             			}
-            			System.out.println("Got l play");
+            			
             			AudioManager.play(instrumentNames[instrToPlay]);
                 		lplayReady = false;
             		}
             		leftReady = false;
+            		maxlPitch = 10000;
             	}
+            	
+//            	Vector currPos = lHand.palmPosition();
+//            	if (!leftReady){
+//	        		if (currPos.getY() > vertThresh){
+//	        			leftReady = false;
+//	        			lplayReady = true;
+//	        		}
+//	        		else{
+//	        			leftReady = true;
+//	        		}
+//            	}
+//            	else{
+//            		if (lplayReady){
+//            			int instrToPlay = 0;
+//            			if (currPos.getX() > 150){
+//            				instrToPlay = 2;
+//            			}
+//            			else if (Math.abs(currPos.getX()) <= 150){
+//            				instrToPlay = 1;
+//            			}
+//            			System.out.println("Got l play");
+//            			AudioManager.play(instrumentNames[instrToPlay]);
+//                		lplayReady = false;
+//            		}
+//            		leftReady = false;
+//            	}
             }
+            
         }
     }
     
     private void recognize(Gesture gesture, long frameNum){
-    	switch (gesture.type()) {
-	    	case TYPE_SWIPE:
-	            SwipeGesture swipe = new SwipeGesture(gesture);
-	            Vector dir = swipe.direction();
-	            if (frameNum % 2 == 0){
-	            	if (dir.getY() > 0 && prevVector.getY() < 0){
-		            	System.out.print("Got here, ");
-		            }
-		            prevVector = dir;
-	            }
-	            
-//	            System.out.println("Swipe id: " + swipe.id()
-//	                       + ", " + swipe.state()
-//	                       + ", position: " + swipe.position()
-//	                       + ", direction: " + swipe.direction()
-//	                       + ", speed: " + swipe.speed());
-	            break;
-	        case TYPE_KEY_TAP:
-//	            KeyTapGesture keyTap = new KeyTapGesture(gesture);
-//	            System.out.println("Key Tap id: " + keyTap.id()
-//	                       + ", " + keyTap.state()
-//	                       + ", position: " + keyTap.position()
-//	                       + ", direction: " + keyTap.direction());
-	            break;
-	        default:
-	            System.out.println("Unknown gesture type.");
-	            break;
-    	}
-    	return;
+    	
     }
 }
 
