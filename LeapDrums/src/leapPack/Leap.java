@@ -98,10 +98,10 @@ class SampleListener extends Listener {
             	if (pitch > maxrPitch || maxrPitch == 10000){
             		maxrPitch = pitch;
             	}
-            	if (pitch > minrPitch + 0.1745){	// 10 deg: 0.1745
+            	if (pitch > minrPitch + 0.13089){	// 10 deg: 0.1745
             		rplayReady = true;
             	}
-            	if (pitch < maxrPitch - 0.1745){
+            	if (pitch < maxrPitch - 0.13089){
             		rightReady = true;
             		minrPitch = 10000;
             	}
@@ -140,10 +140,10 @@ class SampleListener extends Listener {
             	if (pitch > maxlPitch || maxlPitch == 10000){
             		maxlPitch = pitch;
             	}
-            	if (pitch > minlPitch + 0.1745){	// 10 deg: 0.1745
+            	if (pitch > minlPitch + 0.13089){	// 10 deg: 0.1745
             		lplayReady = true;
             	}
-            	if (pitch < maxlPitch - 0.1745){
+            	if (pitch < maxlPitch - 0.13089){
             		leftReady = true;
             		minlPitch = 10000;
             	}
