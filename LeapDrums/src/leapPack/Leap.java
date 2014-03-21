@@ -30,6 +30,8 @@ class SampleListener extends Listener {
 	boolean rplayReady = false;
 	boolean leftReady = false;
 	boolean lplayReady = false;
+	int rinstrToPlay = 0;
+	int linstrToPlay = 0;
 	
 	public SampleListener(String[] instrNames){
 		instrumentNames = instrNames;
@@ -86,10 +88,10 @@ class SampleListener extends Listener {
             	if (pitch > maxrPitch || maxrPitch == 10000){
             		maxrPitch = pitch;
             	}
-            	if (pitch > minrPitch + 0.2617){	// 10 deg: 0.1745
+            	if (pitch > minrPitch + 0.1745){	// 10 deg: 0.1745
             		rplayReady = true;
             	}
-            	if (pitch < maxrPitch - 0.2617){
+            	if (pitch < maxrPitch - 0.1745){
             		rightReady = true;
             		minrPitch = 10000;
             	}
@@ -124,10 +126,10 @@ class SampleListener extends Listener {
             	if (pitch > maxlPitch || maxlPitch == 10000){
             		maxlPitch = pitch;
             	}
-            	if (pitch > minlPitch + 0.2617){	// 10 deg: 0.1745
+            	if (pitch > minlPitch + 0.1745){	// 10 deg: 0.1745
             		lplayReady = true;
             	}
-            	if (pitch < maxlPitch - 0.2617){
+            	if (pitch < maxlPitch - 0.1745){
             		leftReady = true;
             		minlPitch = 10000;
             	}
