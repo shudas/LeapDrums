@@ -15,6 +15,7 @@ import audio.AudioManager;
 
 import com.leapmotion.leap.*;
 import com.leapmotion.leap.Gesture.State;
+import com.leapmotion.leap.Gesture.Type;
 
 class SampleListener extends Listener {
 	final String[] instrumentNames;
@@ -23,15 +24,16 @@ class SampleListener extends Listener {
 	float minlPitch = 10000;
 	float maxrPitch = 10000;
 	float maxlPitch = 10000;
-	String prevrInstr, prevlInstr;
 	double threshold = -20;
 	double vertThresh = 300;
 	boolean rightReady = false;
 	boolean rplayReady = false;
 	boolean leftReady = false;
 	boolean lplayReady = false;
-	int rinstrToPlay = 0;
-	int linstrToPlay = 0;
+	int prevrInstr = 0;
+	int prevlInstr = 0;
+	long prevrtime = 0;
+	long prevltime = 0;
 	
 	public SampleListener(String[] instrNames){
 		instrumentNames = instrNames;
@@ -43,8 +45,6 @@ class SampleListener extends Listener {
 
     public void onConnect(Controller controller) {
         System.out.println("Connected");
-        controller.enableGesture(Gesture.Type.TYPE_SWIPE);
-        controller.enableGesture(Gesture.Type.TYPE_CIRCLE);
         controller.enableGesture(Gesture.Type.TYPE_SCREEN_TAP);
         controller.enableGesture(Gesture.Type.TYPE_KEY_TAP);
     }
@@ -61,7 +61,8 @@ class SampleListener extends Listener {
     public void onFrame(Controller controller) {
         // Get the most recent frame and report some basic information
         Frame frame = controller.frame();
-
+        long currtime = System.currentTimeMillis();
+        
         if (!frame.hands().isEmpty()) {
             // Get the first hand
             Hand rHand = frame.hands().rightmost();
@@ -73,9 +74,18 @@ class SampleListener extends Listener {
             	lHand = new Hand();
             	lTool = new Tool();
             }
+            
 
             if (rHand.isValid() || rTool.isValid()){
             	Vector currPos = rHand.palmPosition();
+            	int instrToPlay = 0;
+    			if (currPos.getX() > 150){
+    				instrToPlay = 2;
+    			}
+    			else if (Math.abs(currPos.getX()) <= 150){
+    				instrToPlay = 1;
+    			}
+            	
             	float pitch = rHand.direction().pitch();
 //            	if (!rTool.isFinger()){
 //            		currPos = rTool.tipPosition();
@@ -95,25 +105,29 @@ class SampleListener extends Listener {
             		rightReady = true;
             		minrPitch = 10000;
             	}
+            	if (prevrInstr != instrToPlay){
+            		rplayReady = true;
+            	}
             	if (rightReady){
             		if (rplayReady){
-            			int instrToPlay = 0;
-            			if (currPos.getX() > 150){
-            				instrToPlay = 2;
-            			}
-            			else if (Math.abs(currPos.getX()) <= 150){
-            				instrToPlay = 1;
-            			}
-            			
+            			prevrInstr = instrToPlay;
             			AudioManager.play(instrumentNames[instrToPlay]);
                 		rplayReady = false;
             		}
             		rightReady = false;
             		maxrPitch = 10000;
             	}
+            	
             }
             if (lHand.isValid() || lTool.isValid()){
             	Vector currPos = lHand.palmPosition();
+            	int instrToPlay = 0;
+    			if (currPos.getX() > 150){
+    				instrToPlay = 2;
+    			}
+    			else if (Math.abs(currPos.getX()) <= 150){
+    				instrToPlay = 1;
+    			}
             	float pitch = lHand.direction().pitch();
 //            	if (!lTool.isFinger()){
 //            		currPos = lTool.tipPosition();
@@ -133,22 +147,19 @@ class SampleListener extends Listener {
             		leftReady = true;
             		minlPitch = 10000;
             	}
+            	if (prevlInstr != instrToPlay){
+            		lplayReady = true;
+            	}
             	if (leftReady){
             		if (lplayReady){
-            			int instrToPlay = 0;
-            			if (currPos.getX() > 150){
-            				instrToPlay = 2;
-            			}
-            			else if (Math.abs(currPos.getX()) <= 150){
-            				instrToPlay = 1;
-            			}
-            			
+            			prevlInstr = instrToPlay;
             			AudioManager.play(instrumentNames[instrToPlay]);
                 		lplayReady = false;
             		}
             		leftReady = false;
             		maxlPitch = 10000;
             	}
+            	
             }
             
         }
