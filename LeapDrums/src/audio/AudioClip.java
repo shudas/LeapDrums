@@ -1,9 +1,6 @@
 package audio;
 
 import java.io.File;
-import java.io.IOException;
-import java.net.*;
-import java.nio.file.*;
 
 import javax.sound.sampled.*;
 

@@ -14,8 +14,6 @@ import java.lang.Math;
 import audio.AudioManager;
 
 import com.leapmotion.leap.*;
-import com.leapmotion.leap.Gesture.State;
-import com.leapmotion.leap.Gesture.Type;
 
 class SampleListener extends Listener {
 	final String[] instrumentNames;
@@ -61,7 +59,6 @@ class SampleListener extends Listener {
     public void onFrame(Controller controller) {
         // Get the most recent frame and report some basic information
         Frame frame = controller.frame();
-        long currtime = System.currentTimeMillis();
         
         if (!frame.hands().isEmpty()) {
             // Get the first hand
