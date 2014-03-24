@@ -79,10 +79,10 @@ class SampleListener extends Listener {
             if (rHand.isValid() || rTool.isValid()){
             	Vector currPos = rHand.palmPosition();
             	int instrToPlay = 0;
-    			if (currPos.getX() > 150){
+    			if (currPos.getX() > 130){
     				instrToPlay = 2;
     			}
-    			else if (Math.abs(currPos.getX()) <= 150){
+    			else if (Math.abs(currPos.getX()) <= 130){
     				instrToPlay = 1;
     			}
             	
@@ -122,10 +122,10 @@ class SampleListener extends Listener {
             if (lHand.isValid() || lTool.isValid()){
             	Vector currPos = lHand.palmPosition();
             	int instrToPlay = 0;
-    			if (currPos.getX() > 150){
+    			if (currPos.getX() > 130){
     				instrToPlay = 2;
     			}
-    			else if (Math.abs(currPos.getX()) <= 150){
+    			else if (Math.abs(currPos.getX()) <= 130){
     				instrToPlay = 1;
     			}
             	float pitch = lHand.direction().pitch();
