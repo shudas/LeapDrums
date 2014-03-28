@@ -164,23 +164,19 @@ class SampleListener extends Listener {
 }
 
 public class Leap {
+	private static SampleListener listener;
+    private static Controller controller;
+	
     public static void initLeap(String[] instrNames) {
         // Create a sample listener and controller
-        SampleListener listener = new SampleListener(instrNames);
-        Controller controller = new Controller();
-
+    	listener = new SampleListener(instrNames);
+        controller = new Controller();
         // Have the sample listener receive events from the controller
-        controller.addListener(listener);
-
-        // Keep this process running until Enter is pressed
-        System.out.println("Press Enter to quit...");
-        try {
-            System.in.read();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        // Remove the sample listener when done
+        controller.addListener(listener);       
+    }
+    
+    public static void disconnect(){
+    	 // Remove the sample listener when done
         controller.removeListener(listener);
     }
 }
