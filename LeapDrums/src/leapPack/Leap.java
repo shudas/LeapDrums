@@ -38,22 +38,22 @@ class SampleListener extends Listener {
 	}
 	
     public void onInit(Controller controller) {
-        System.out.println("Initialized");
+        System.err.println("Initialized");
     }
 
     public void onConnect(Controller controller) {
-        System.out.println("Connected");
+        System.err.println("Connected");
         controller.enableGesture(Gesture.Type.TYPE_SCREEN_TAP);
         controller.enableGesture(Gesture.Type.TYPE_KEY_TAP);
     }
 
     public void onDisconnect(Controller controller) {
         //Note: not dispatched when running in a debugger.
-        System.out.println("Disconnected");
+        System.err.println("Disconnected");
     }
 
     public void onExit(Controller controller) {
-        System.out.println("Exited");
+        System.err.println("Exited");
     }
 
     public void onFrame(Controller controller) {
