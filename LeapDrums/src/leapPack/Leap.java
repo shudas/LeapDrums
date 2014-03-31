@@ -38,22 +38,22 @@ class SampleListener extends Listener {
 	}
 	
     public void onInit(Controller controller) {
-        System.err.println("Initialized");
+        System.err.println("Leap Motion Initialized");
     }
 
     public void onConnect(Controller controller) {
-        System.err.println("Connected");
+        System.err.println("Leap Motion Connected");
         controller.enableGesture(Gesture.Type.TYPE_SCREEN_TAP);
         controller.enableGesture(Gesture.Type.TYPE_KEY_TAP);
     }
 
     public void onDisconnect(Controller controller) {
         //Note: not dispatched when running in a debugger.
-        System.err.println("Disconnected");
+        System.err.println("Leap Motion Disconnected");
     }
 
     public void onExit(Controller controller) {
-        System.err.println("Exited");
+        System.err.println("Leap Motion Exited");
     }
 
     public void onFrame(Controller controller) {
