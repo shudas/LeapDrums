@@ -10,24 +10,45 @@ public class LeapHit {
 	
 	private PropertyChangeSupport pcs = new PropertyChangeSupport(this);
 	
-	private boolean hit;
-	private int instrument;
+	private boolean rhit;
+	private boolean lhit;
+	private int rinstrument;
+	private int linstrument;
     
-	public boolean getHit() {
-		return hit;
+	public boolean getrHit() {
+		return rhit;
 	}
-	public void setHit(boolean hit) {
+	public void setrHit(boolean hit) {
 		// old value is the instrument
-		pcs.firePropertyChange("hit", instrument, hit);
-		this.hit = hit;
+		pcs.firePropertyChange("rhit", rinstrument, hit);
+		this.rhit = hit;
 	}
 	
-	public int getInstrument() {
-		return instrument;
+	public int getrInstrument() {
+		return rinstrument;
 	}
-	public void setInstrument(int instrument) {
-		pcs.firePropertyChange("instrument", this.instrument, instrument);
-		this.instrument = instrument;
+	public void setrInstrument(int instrument) {
+		pcs.firePropertyChange("rinstrument", this.rinstrument, instrument);
+		this.rinstrument = instrument;
+	}
+	
+	public boolean getlHit() {
+		return lhit;
+	}
+	
+	public void setlHit(boolean hit) {
+		// old value is the instrument
+		pcs.firePropertyChange("lhit", linstrument, hit);
+		this.lhit = hit;
+	}
+	
+	public int getlInstrument() {
+		return linstrument;
+	}
+	
+	public void setlInstrument(int instrument) {
+		pcs.firePropertyChange("linstrument", this.linstrument, instrument);
+		this.linstrument = instrument;
 	}
 	
 	public void addPropertyChangeListener(PropertyChangeListener listener) {

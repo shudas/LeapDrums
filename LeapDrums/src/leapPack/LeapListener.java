@@ -23,8 +23,6 @@ public class LeapListener extends Listener {
 	float minlPitch = 10000;
 	float maxrPitch = 10000;
 	float maxlPitch = 10000;
-	double threshold = -20;
-	double vertThresh = 300;
 	boolean rightReady = false;
 	boolean rplayReady = false;
 	boolean leftReady = false;
@@ -33,6 +31,8 @@ public class LeapListener extends Listener {
 	int prevlInstr = 0;
 	long prevrtime = 0;
 	long prevltime = 0;
+	boolean lefthit = false;
+	boolean righthit = false;
 	
 	public LeapListener(String[] instrNames){
 		instrumentNames = instrNames;
@@ -75,6 +75,14 @@ public class LeapListener extends Listener {
         // Get the most recent frame and report some basic information
         Frame frame = controller.frame();
         
+        // turn off button color after a bit if hit. frame timestamp is in microsec
+        if (leapHit.getlHit() && frame.timestamp() - prevltime > 100000) {
+        	leapHit.setlHit(false);
+        }
+        if (leapHit.getrHit() && frame.timestamp() - prevrtime > 100000) {
+        	leapHit.setrHit(false);
+        }
+        
         if (!frame.hands().isEmpty()) {
             // Get the first hand
             Hand rHand = frame.hands().rightmost();
@@ -116,15 +124,15 @@ public class LeapListener extends Listener {
             	if (pitch < maxrPitch - 0.13089){
             		rightReady = true;
             		minrPitch = 10000;
-            		leapHit.setHit(false);
             	}
             	if (prevrInstr != instrToPlay){
             		rplayReady = true;
             	}
             	if (rightReady){
             		if (rplayReady){
-            			leapHit.setInstrument(instrToPlay);
-            			leapHit.setHit(true);
+            			leapHit.setrInstrument(instrToPlay);
+            			leapHit.setrHit(true);
+            			this.prevrtime = frame.timestamp();
             			prevrInstr = instrToPlay;
             			AudioManager.play(instrumentNames[instrToPlay]);
                 		rplayReady = false;
@@ -161,15 +169,15 @@ public class LeapListener extends Listener {
             	if (pitch < maxlPitch - 0.13089){
             		leftReady = true;
             		minlPitch = 10000;
-            		leapHit.setHit(false);
             	}
             	if (prevlInstr != instrToPlay){
             		lplayReady = true;
             	}
             	if (leftReady){
             		if (lplayReady){
-            			leapHit.setInstrument(instrToPlay);
-            			leapHit.setHit(true);
+            			leapHit.setlInstrument(instrToPlay);
+            			leapHit.setlHit(true);
+            			this.prevltime = frame.timestamp();
             			prevlInstr = instrToPlay;
             			AudioManager.play(instrumentNames[instrToPlay]);
                 		lplayReady = false;

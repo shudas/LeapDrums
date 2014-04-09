@@ -10,6 +10,7 @@ import audio.AudioManager;
 
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.awt.geom.Ellipse2D;
 
 import javax.swing.BoxLayout;
 import javax.swing.JSplitPane;
@@ -24,6 +25,9 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Font;
+import java.awt.Frame;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.GraphicsEnvironment;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -32,12 +36,12 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 
-public class MainWindow {
+public class MainWindow extends JPanel {
 
 	static JPanel panel_1;
 	
 	static Color [] inactiveColors = { new Color(98, 177, 255), new Color(255, 132, 123), new Color(99, 209, 111)};
-	static Color [] activeColors = { new Color(24, 141, 255), new Color(222, 121, 91), new Color(20, 209, 39)};
+	static Color [] activeColors = { new Color(24, 141, 255), new Color(222, 121, 91), new Color(17, 181, 34)};
 	
 	private JFrame frame;
 	String fontFamily = "Segoe UI";
@@ -49,8 +53,11 @@ public class MainWindow {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
+//					JFrame frame = new JFrame("Leap Drums");
+//					frame.add(new MainWindow());
 					MainWindow window = new MainWindow();
 					window.frame.setVisible(true);
+//					frame.setVisible(true);
 					AudioManager.loadConfig();
 
 					Object[] instrNames = AudioManager.getInstrumentNames().toArray();
@@ -133,12 +140,20 @@ public class MainWindow {
 		
 		// color the main instrument panel
 		initColors();
+		
+		frame.add(new DrawCircle());
 	}
 	
 	public void initColors(){
 		for (int i = 0; i < panel_1.getComponentCount(); ++i){
 			panel_1.getComponent(i).setBackground(inactiveColors[i % inactiveColors.length]);
 		}
+	}
+	
+	public void drawCenteredCircle(Graphics2D g, int x, int y, int r) {
+		x = x-(r/2);
+		y = y-(r/2);
+		g.fillOval(x,y,r,r);
 	}
 	
 	public static void changeFont ( Component component, Font font )
@@ -157,7 +172,7 @@ public class MainWindow {
 	    // This method is called every time the property value is changed
 	    public void propertyChange(PropertyChangeEvent evt) {
 	    	String propName = evt.getPropertyName();
-	    	if (propName == "hit"){
+	    	if (propName == "lhit" || propName == "rhit"){
 	    		// hit is either true or false new value. oldValue contains instrument property
 	    		if ((boolean)evt.getNewValue() == false){
 	    			panel_1.getComponent((int)evt.getOldValue()).
@@ -169,11 +184,24 @@ public class MainWindow {
 	    		}
 	    	}
 	    	
-	    	
-	    	System.out.println("Name = " + evt.getPropertyName());
-	    	System.out.println("Old Value = " + evt.getOldValue());
-	    	System.out.println("New Value = " + evt.getNewValue());
-	    	System.out.println("**********************************");
+//	    	System.err.println("Name = " + evt.getPropertyName());
+//	    	System.err.println("Old Value = " + evt.getOldValue());
+//	    	System.err.println("New Value = " + evt.getNewValue());
+//	    	System.err.println("**********************************");
 	    }
 	}
+    
+    public class DrawCircle extends JPanel {
+    	@Override
+    	public void paint(Graphics g) {
+    		Graphics2D g2d = (Graphics2D) g;
+    		g2d.setColor(Color.RED);
+    		g2d.fillOval(0, 0, 30, 30);
+    		g2d.drawOval(0, 50, 30, 30);		
+    		g2d.fillRect(50, 0, 30, 30);
+    		g2d.drawRect(50, 50, 30, 30);
+
+    		g2d.draw(new Ellipse2D.Double(0, 100, 30, 30));
+    	}
+    }
 }
