@@ -15,6 +15,8 @@ import ui.MainWindow.MyPropertyChangeListener;
 
 public class LeapListener extends Listener {
 	
+	boolean rset = false;
+	Frame prevFrame;
 	public LeapHit leapHit;
 	
 	final String[] instrumentNames;
@@ -97,8 +99,17 @@ public class LeapListener extends Listener {
             
 
             if (rHand.isValid() || rTool.isValid()){
+            	try {
+            		System.out.println(rHand.rotationAngle(prevFrame, Vector.xAxis()) * 180 / Math.PI);
+            	} catch (Exception e) { }
+            	
+//            	System.out.print("," + rHand.palmVelocity().getY());
+//            	System.out.println("," + rHand.palmVelocity().getZ());
+            	
+            	
             	Vector currPos = rHand.palmPosition();
             	int instrToPlay = 0;
+            	// DONT USE ABSOLUTE VALUES
     			if (currPos.getX() > 130){
     				instrToPlay = 2;
     			}
@@ -130,6 +141,7 @@ public class LeapListener extends Listener {
             	}
             	if (rightReady){
             		if (rplayReady){
+            			System.out.println("Yo");
             			leapHit.setrInstrument(instrToPlay);
             			leapHit.setrHit(true);
             			this.prevrtime = frame.timestamp();
@@ -140,6 +152,17 @@ public class LeapListener extends Listener {
             		rightReady = false;
             		maxrPitch = 10000;
             	}
+            	
+//            	try {
+//	            	if (rHand.rotationAngle(prevFrame, Vector.xAxis()) > 0.0087266 && rset) {
+//	            		prevrInstr = instrToPlay;
+//	            		AudioManager.play(instrumentNames[instrToPlay]);
+//	            		rset = false;
+//	            	}
+//	            	else if (rHand.rotationAngle(prevFrame, Vector.xAxis()) <= 0) {
+//	            		rset = true;
+//	            	}
+//            	} catch (Exception e) {}
             	
             }
             if (lHand.isValid() || lTool.isValid()){
@@ -187,6 +210,8 @@ public class LeapListener extends Listener {
             	}
             	
             }
+            
+            prevFrame = frame;
             
         }
     }

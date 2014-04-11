@@ -36,7 +36,7 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 
-public class MainWindow extends JPanel {
+public class MainWindow extends JFrame {
 
 	static JPanel panel_1;
 	
@@ -56,7 +56,7 @@ public class MainWindow extends JPanel {
 //					JFrame frame = new JFrame("Leap Drums");
 //					frame.add(new MainWindow());
 					MainWindow window = new MainWindow();
-					window.frame.setVisible(true);
+					window.setVisible(true);
 //					frame.setVisible(true);
 					AudioManager.loadConfig();
 
@@ -82,22 +82,22 @@ public class MainWindow extends JPanel {
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
-		frame = new JFrame();
-		frame.addWindowListener(new WindowAdapter() {
+//		frame = new JFrame();
+		this.addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent e) {
 				Leap.disconnect();
 			}
 		});
-		frame.setBounds(100, 100, 720, 480);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.getContentPane().setLayout(new GridLayout(0, 1, 0, 0));
+		this.setBounds(100, 100, 720, 480);
+		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		this.getContentPane().setLayout(new GridLayout(0, 1, 0, 0));
 		
 		JSplitPane splitPane = new JSplitPane();
 		splitPane.setOpaque(true);
 		splitPane.setOrientation(JSplitPane.VERTICAL_SPLIT);
 		splitPane.setBackground(new Color(90, 90, 90));
-		frame.getContentPane().add(splitPane);
+		this.getContentPane().add(splitPane);
 		
 		JPanel panel = new JPanel();
 		panel.setOpaque(false);
@@ -105,6 +105,7 @@ public class MainWindow extends JPanel {
 		panel.setLayout(new BorderLayout(0, 0));
 		
 		panel_1 = new JPanel();
+//		panel_1 = new DrawCircle();
 		panel_1.setOpaque(false);
 		panel.add(panel_1);
 		panel_1.setLayout(new GridLayout(1, 3, 12, 4));
@@ -141,9 +142,20 @@ public class MainWindow extends JPanel {
 		// color the main instrument panel
 		initColors();
 		
-		frame.add(new DrawCircle());
+//		frame.add(new DrawCircle());
 	}
 	
+//	@Override
+//	public void paint(Graphics g) {
+//		Graphics2D g2d = (Graphics2D) g;
+//		g2d.setColor(Color.RED);
+//		g2d.fillOval(0, 0, 30, 30);
+//		g2d.drawOval(0, 50, 30, 30);		
+//		g2d.fillRect(50, 0, 30, 30);
+//		g2d.drawRect(50, 50, 30, 30);
+//		g2d.draw(new Ellipse2D.Double(0, 100, 30, 30));
+//	}
+//	
 	public void initColors(){
 		for (int i = 0; i < panel_1.getComponentCount(); ++i){
 			panel_1.getComponent(i).setBackground(inactiveColors[i % inactiveColors.length]);
@@ -192,16 +204,43 @@ public class MainWindow extends JPanel {
 	}
     
     public class DrawCircle extends JPanel {
+    	
+    	public DrawCircle() {
+    		this.setOpaque(false);
+//    		panel.add(panel_1);
+    		this.setLayout(new GridLayout(1, 3, 12, 4));
+    		
+    		JLabel lblNewLabel_1 = new JLabel("Kick");
+    		lblNewLabel_1.setHorizontalAlignment(SwingConstants.CENTER);
+    		lblNewLabel_1.setForeground(Color.WHITE);
+    		lblNewLabel_1.setOpaque(true);
+    		this.add(lblNewLabel_1);
+    		
+    		JLabel lblNewLabel_2 = new JLabel("Snare");
+    		lblNewLabel_2.setForeground(Color.WHITE);
+    		lblNewLabel_2.setHorizontalAlignment(SwingConstants.CENTER);
+    		lblNewLabel_2.setHorizontalTextPosition(SwingConstants.LEADING);
+    		lblNewLabel_2.setOpaque(true);
+    		this.add(lblNewLabel_2);
+    		
+    		JLabel lblNewLabel_3 = new JLabel("Hi Hat");
+    		lblNewLabel_3.setForeground(Color.WHITE);
+    		lblNewLabel_3.setHorizontalAlignment(SwingConstants.CENTER);
+    		lblNewLabel_3.setOpaque(true);
+    		this.add(lblNewLabel_3);
+    	}
+    	
     	@Override
-    	public void paint(Graphics g) {
+    	public void paintComponent(Graphics g) {
+//    		super.paintComponent(g);
     		Graphics2D g2d = (Graphics2D) g;
     		g2d.setColor(Color.RED);
     		g2d.fillOval(0, 0, 30, 30);
-    		g2d.drawOval(0, 50, 30, 30);		
-    		g2d.fillRect(50, 0, 30, 30);
-    		g2d.drawRect(50, 50, 30, 30);
-
-    		g2d.draw(new Ellipse2D.Double(0, 100, 30, 30));
+//    		g2d.drawOval(0, 50, 30, 30);		
+//    		g2d.fillRect(50, 0, 30, 30);
+//    		g2d.drawRect(50, 50, 30, 30);
+//
+//    		g2d.draw(new Ellipse2D.Double(0, 100, 30, 30));
     	}
     }
 }
