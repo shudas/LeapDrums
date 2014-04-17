@@ -109,12 +109,13 @@ public class MainWindow extends JFrame {
 		panel_1.setOpaque(false);
 		panel.add(panel_1);
 		panel_1.setLayout(new GridLayout(1, 3, 40, 20));
-		panel_1.setBorder(new EmptyBorder(20, 20, 20, 20) );
+//		panel_1.setBorder(new EmptyBorder(20, 20, 20, 20) );
 		
 		JLabel lblNewLabel_1 = new JLabel("Kick");
 		lblNewLabel_1.setHorizontalAlignment(SwingConstants.CENTER);
 		lblNewLabel_1.setForeground(Color.WHITE);
 		lblNewLabel_1.setOpaque(true);
+		lblNewLabel_1.setBorder(new EmptyBorder(20, 20, 20, 20) );
 		panel_1.add(lblNewLabel_1);
 		
 		JLabel lblNewLabel_2 = new JLabel("Snare");
