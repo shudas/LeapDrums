@@ -38,8 +38,11 @@ import javax.swing.SwingConstants;
 
 public class MainWindow extends JFrame {
 
+	static boolean colored;
 	static JPanel panel_1;
 	
+	static Color background = new Color(90, 90, 90);
+	static Color activeBack = new Color(240, 240 ,240);
 	static Color [] inactiveColors = { new Color(98, 177, 255), new Color(255, 132, 123), new Color(99, 209, 111)};
 	static Color [] activeColors = { new Color(24, 141, 255), new Color(222, 121, 91), new Color(17, 181, 34)};
 	
@@ -74,7 +77,7 @@ public class MainWindow extends JFrame {
 	 */
 	public MainWindow() {
 		initialize();
-		
+		colored = false;
 //		Leap.leapHit.addPropertyChangeListener(new MyPropertyChangeListener());
 	}
 
@@ -89,14 +92,14 @@ public class MainWindow extends JFrame {
 				Leap.disconnect();
 			}
 		});
-		this.setBounds(100, 100, 720, 480);
+		this.setBounds(100, 100, 840, 480);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.getContentPane().setLayout(new GridLayout(0, 1, 0, 0));
 		
 		JSplitPane splitPane = new JSplitPane();
 		splitPane.setOpaque(true);
 		splitPane.setOrientation(JSplitPane.VERTICAL_SPLIT);
-		splitPane.setBackground(new Color(90, 90, 90));
+		splitPane.setBackground(background);
 		this.getContentPane().add(splitPane);
 		
 		JPanel panel = new JPanel();
@@ -105,31 +108,10 @@ public class MainWindow extends JFrame {
 		panel.setLayout(new BorderLayout(0, 0));
 		
 		panel_1 = new JPanel();
-//		panel_1 = new DrawCircle();
 		panel_1.setOpaque(false);
 		panel.add(panel_1);
-		panel_1.setLayout(new GridLayout(1, 3, 40, 20));
+		panel_1.setLayout(new GridLayout(1, 3, 20, 20));
 //		panel_1.setBorder(new EmptyBorder(20, 20, 20, 20) );
-		
-		JLabel lblNewLabel_1 = new JLabel("Kick");
-		lblNewLabel_1.setHorizontalAlignment(SwingConstants.CENTER);
-		lblNewLabel_1.setForeground(Color.WHITE);
-		lblNewLabel_1.setOpaque(true);
-		lblNewLabel_1.setBorder(new EmptyBorder(20, 20, 20, 20) );
-		panel_1.add(lblNewLabel_1);
-		
-		JLabel lblNewLabel_2 = new JLabel("Snare");
-		lblNewLabel_2.setForeground(Color.WHITE);
-		lblNewLabel_2.setHorizontalAlignment(SwingConstants.CENTER);
-		lblNewLabel_2.setHorizontalTextPosition(SwingConstants.LEADING);
-		lblNewLabel_2.setOpaque(true);
-		panel_1.add(lblNewLabel_2);
-		
-		JLabel lblNewLabel_3 = new JLabel("Hi Hat");
-		lblNewLabel_3.setForeground(Color.WHITE);
-		lblNewLabel_3.setHorizontalAlignment(SwingConstants.CENTER);
-		lblNewLabel_3.setOpaque(true);
-		panel_1.add(lblNewLabel_3);
 		panel.setBorder(new EmptyBorder(10, 10, 10, 10) );
 		
 		JLabel lblNewLabel = new JLabel("Instruments");
@@ -139,6 +121,43 @@ public class MainWindow extends JFrame {
 		
 		// change all fonts
 		changeFont(panel_1, new Font(fontFamily, Font.PLAIN, 20));
+		
+		JPanel panel_2 = new JPanel();
+		panel_2.setBackground(background);
+		panel_2.setBorder(new EmptyBorder(20, 20, 20, 20));
+		panel_1.add(panel_2);
+		panel_2.setLayout(new BorderLayout(0, 0));
+		
+		JLabel lblNewLabel_1 = new JLabel("Kick");
+		panel_2.add(lblNewLabel_1, BorderLayout.CENTER);
+		lblNewLabel_1.setHorizontalAlignment(SwingConstants.CENTER);
+		lblNewLabel_1.setForeground(Color.WHITE);
+		lblNewLabel_1.setOpaque(true);
+		
+		JPanel panel_3 = new JPanel();
+		panel_3.setBackground(background);
+		panel_3.setBorder(new EmptyBorder(20, 20, 20, 20));
+		panel_1.add(panel_3);
+		panel_3.setLayout(new BorderLayout(0, 0));
+		
+		JLabel lblNewLabel_2 = new JLabel("Snare");
+		panel_3.add(lblNewLabel_2);
+		lblNewLabel_2.setForeground(Color.WHITE);
+		lblNewLabel_2.setHorizontalAlignment(SwingConstants.CENTER);
+		lblNewLabel_2.setHorizontalTextPosition(SwingConstants.LEADING);
+		lblNewLabel_2.setOpaque(true);
+		
+		JPanel panel_4 = new JPanel();
+		panel_4.setBackground(background);
+		panel_4.setBorder(new EmptyBorder(20, 20, 20, 20));
+		panel_1.add(panel_4);
+		panel_4.setLayout(new BorderLayout(0, 0));
+		
+		JLabel lblNewLabel_3 = new JLabel("Hi Hat");
+		panel_4.add(lblNewLabel_3);
+		lblNewLabel_3.setForeground(Color.WHITE);
+		lblNewLabel_3.setHorizontalAlignment(SwingConstants.CENTER);
+		lblNewLabel_3.setOpaque(true);
 		changeFont(lblNewLabel, new Font(fontFamily, Font.PLAIN, 16));
 		
 		// color the main instrument panel
@@ -160,7 +179,7 @@ public class MainWindow extends JFrame {
 //	
 	public void initColors(){
 		for (int i = 0; i < panel_1.getComponentCount(); ++i){
-			panel_1.getComponent(i).setBackground(inactiveColors[i % inactiveColors.length]);
+			((JPanel) panel_1.getComponent(i)).getComponent(0).setBackground(inactiveColors[i % inactiveColors.length]);
 		}
 	}
 	
@@ -175,10 +194,9 @@ public class MainWindow extends JFrame {
 	    component.setFont ( font );
 	    if ( component instanceof Container )
 	    {
-	        for ( Component child : ( ( Container ) component ).getComponents () )
-	        {
-	            changeFont ( child, font );
-	        }
+	    	for (int i = 0; i < panel_1.getComponentCount(); ++i){
+				((JPanel) panel_1.getComponent(i)).getComponent(0).setFont(font);
+			}
 	    }
 	}
 	
@@ -189,11 +207,11 @@ public class MainWindow extends JFrame {
 	    	if (propName == "lhit" || propName == "rhit"){
 	    		// hit is either true or false new value. oldValue contains instrument property
 	    		if ((boolean)evt.getNewValue() == false){
-	    			panel_1.getComponent((int)evt.getOldValue()).
+	    			((JPanel)panel_1.getComponent((int)evt.getOldValue())).getComponent(0).
 	    				setBackground(inactiveColors[(int)evt.getOldValue() % inactiveColors.length]);
 	    		}
 	    		else if ((boolean)evt.getNewValue() == true){
-	    			panel_1.getComponent((int)evt.getOldValue()).
+	    			((JPanel)panel_1.getComponent((int)evt.getOldValue())).getComponent(0).
 	    			setBackground(activeColors[(int)evt.getOldValue() % activeColors.length]);
 	    		}
 	    	}
@@ -204,6 +222,26 @@ public class MainWindow extends JFrame {
 //	    	System.err.println("**********************************");
 	    }
 	}
+    
+    public static void ChangeBackground(int item, boolean active) {
+    	if (item == -1) {
+    		// dont need to recolor anything
+//    		if (colored == false) return;
+    		for (int i = 0; i < panel_1.getComponentCount(); ++i){
+    			((JPanel) panel_1.getComponent(i)).setBackground(background);
+    			((JPanel) panel_1.getComponent(i)).getComponent(0).setBackground(inactiveColors[i % inactiveColors.length]);
+    		}
+//    		colored = false;
+    		return;
+    	}
+    	if (active) {
+    		((JPanel) panel_1.getComponent(item)).setBackground(activeBack);
+//    		colored = true;
+    	}
+    	else {
+    		((JPanel) panel_1.getComponent(item)).setBackground(background);
+    	}
+    }
     
     public class DrawCircle extends JPanel {
     	

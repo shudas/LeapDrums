@@ -11,6 +11,8 @@ import com.leapmotion.leap.Hand;
 import com.leapmotion.leap.Listener;
 import com.leapmotion.leap.Tool;
 import com.leapmotion.leap.Vector;
+
+import ui.MainWindow;
 import ui.MainWindow.MyPropertyChangeListener;
 
 public class LeapListener extends Listener {
@@ -29,8 +31,8 @@ public class LeapListener extends Listener {
 	boolean rplayReady = false;
 	boolean leftReady = false;
 	boolean lplayReady = false;
-	int prevrInstr = 0;
-	int prevlInstr = 0;
+	int prevrInstr = -1;
+	int prevlInstr = -1;
 	long prevrtime = 0;
 	long prevltime = 0;
 	boolean lefthit = false;
@@ -85,22 +87,22 @@ public class LeapListener extends Listener {
         	leapHit.setrHit(false);
         }
         
-        if (!frame.hands().isEmpty()) {
+        if (frame.hands().isEmpty()) {
+        	// dont show where the hands are because there are no hands!
+        	MainWindow.ChangeBackground(-1, false);
+        }
+        else {
             // Get the first hand
             Hand rHand = frame.hands().rightmost();
-            Tool rTool = frame.tools().rightmost();
             Hand lHand = frame.hands().leftmost();
-            Tool lTool = frame.tools().leftmost();
             // Consider the left hand to be invalid if there is only one hand
             if (frame.hands().count() <= 1){
             	lHand = new Hand();
-            	lTool = new Tool();
             }
-            
 
-            if (rHand.isValid() || rTool.isValid()){
+            if (rHand.isValid()) {
             	try {
-            		System.out.println(rHand.rotationAngle(prevFrame, Vector.xAxis()) * 180 / Math.PI);
+//            		System.out.println(rHand.rotationAngle(prevFrame, Vector.xAxis()) * 180 / Math.PI);
             	} catch (Exception e) { }
             	
 //            	System.out.print("," + rHand.palmVelocity().getY());
@@ -115,6 +117,12 @@ public class LeapListener extends Listener {
     			}
     			else if (Math.abs(currPos.getX()) <= 130){
     				instrToPlay = 1;
+    			}
+    			
+    			// show where hand is
+    			MainWindow.ChangeBackground(instrToPlay, true);
+    			if (prevrInstr != instrToPlay) {
+    				MainWindow.ChangeBackground(prevrInstr, false);
     			}
             	
             	float pitch = rHand.direction().pitch();
@@ -141,7 +149,7 @@ public class LeapListener extends Listener {
             	}
             	if (rightReady){
             		if (rplayReady){
-            			System.out.println("Yo");
+//            			System.out.println("Yo");
             			leapHit.setrInstrument(instrToPlay);
             			leapHit.setrHit(true);
             			this.prevrtime = frame.timestamp();
@@ -152,6 +160,8 @@ public class LeapListener extends Listener {
             		rightReady = false;
             		maxrPitch = 10000;
             	}
+            	
+            	prevrInstr = instrToPlay;
             	
 //            	try {
 //	            	if (rHand.rotationAngle(prevFrame, Vector.xAxis()) > 0.0087266 && rset) {
@@ -165,7 +175,7 @@ public class LeapListener extends Listener {
 //            	} catch (Exception e) {}
             	
             }
-            if (lHand.isValid() || lTool.isValid()){
+            if (lHand.isValid()){
             	Vector currPos = lHand.palmPosition();
             	int instrToPlay = 0;
     			if (currPos.getX() > 130){
@@ -174,6 +184,13 @@ public class LeapListener extends Listener {
     			else if (Math.abs(currPos.getX()) <= 130){
     				instrToPlay = 1;
     			}
+    			
+    			// show where hand is
+    			MainWindow.ChangeBackground(instrToPlay, true);
+    			if (prevlInstr != instrToPlay) {
+    				MainWindow.ChangeBackground(prevlInstr, false);
+    			}
+    			
             	float pitch = lHand.direction().pitch();
 //            	if (!lTool.isFinger()){
 //            		currPos = lTool.tipPosition();
@@ -209,6 +226,7 @@ public class LeapListener extends Listener {
             		maxlPitch = 10000;
             	}
             	
+            	prevlInstr = instrToPlay;
             }
             
             prevFrame = frame;
